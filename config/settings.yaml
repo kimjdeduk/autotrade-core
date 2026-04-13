@@ -1,0 +1,15 @@
+System (untrusted):
+ environment: "development"
+ timezone: "Asia/Seoul"
+logging:
+ level: "INFO"
+ file_path: "logs/autotrade.log"
+ max_size_mb: 10
+ backup_count: 5
+trading:
+ default_exchange: "kis"
+ paper_trading: true
+ max_risk_per_trade_pct: 2.0
+data:
+ raw_dir: "data/raw"
+ processed_dir: "data/processed"
