@@ -3,20 +3,25 @@
 auto_pull_watcher.py - GitHub 자동 pull & 지시문 실행 감시기
 
 사자(Manus)가 instructions/ 폴더에 새 지시문을 push하면,
-이 스크립트가 자동으로 감지하여 아사(OpenClaw)에게 알려줍니다.
+이 스크립트가 자동으로 감지하여:
+  1. git pull 수행
+  2. 알림봇으로 Commander에게 알림
+  3. 트리거 파일 생성 → instruction_executor가 자동 실행
 
 작동 방식:
   1. 30초마다 git fetch 수행
   2. 원격 브랜치에 새 커밋이 있으면 git pull
   3. instructions/ 폴더에 새 파일이 있는지 확인
   4. 새 지시문 발견 시 알림봇으로 Commander에게 알림
-  5. 처리된 지시문 목록을 로컬에 기록하여 중복 실행 방지
+  5. 트리거 파일(/tmp/autotrade_trigger.json) 생성
+  6. 처리된 지시문 목록을 로컬에 기록하여 중복 실행 방지
 
 환경변수 (.env):
   TELEGRAM_ALARM_TOKEN  - 알림봇 토큰
   TELEGRAM_CHAT_ID      - Commander 채팅 ID
   REPO_PATH             - autotrade-core 저장소 경로
   POLL_INTERVAL         - 감시 주기 (초, 기본값 30)
+  TRIGGER_FILE          - 트리거 파일 경로 (기본값: /tmp/autotrade_trigger.json)
 """
 
 import os
@@ -223,6 +228,37 @@ def check_instruction_status(filepath: Path) -> str:
 
 
 # ──────────────────────────────────────────────
+# 트리거 파일 생성 (instruction_executor 연동)
+# ──────────────────────────────────────────────
+def create_trigger(trigger_file: Path, instruction_files: list, repo_path: Path):
+    """새 지시문 발견 시 트리거 파일 생성 → instruction_executor가 감지하여 실행"""
+    trigger_data = {
+        "command": "execute_instructions",
+        "instructions": [
+            {
+                "filename": f.name,
+                "filepath": str(f),
+                "detected_at": datetime.now().isoformat()
+            }
+            for f in instruction_files
+        ],
+        "repo_path": str(repo_path),
+        "source": "auto_pull_watcher",
+        "created_at": datetime.now().isoformat()
+    }
+
+    try:
+        trigger_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(trigger_file, "w", encoding="utf-8") as f:
+            json.dump(trigger_data, f, indent=2, ensure_ascii=False)
+        logger.info(f"트리거 파일 생성: {trigger_file} ({len(instruction_files)}건)")
+        return True
+    except Exception as e:
+        logger.error(f"트리거 파일 생성 실패: {e}")
+        return False
+
+
+# ──────────────────────────────────────────────
 # 메인 루프
 # ──────────────────────────────────────────────
 def main():
@@ -232,6 +268,7 @@ def main():
 
     repo_path = Path(os.environ.get("REPO_PATH", str(default_repo)))
     poll_interval = int(os.environ.get("POLL_INTERVAL", "30"))
+    trigger_file = Path(os.environ.get("TRIGGER_FILE", "/tmp/autotrade_trigger.json"))
 
     # .env 로드
     env_vars = load_env(repo_path)
@@ -239,6 +276,10 @@ def main():
     # 환경변수 우선순위: OS 환경변수 > .env 파일
     telegram_token = os.environ.get("TELEGRAM_ALARM_TOKEN", env_vars.get("TELEGRAM_ALARM_TOKEN", ""))
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", env_vars.get("TELEGRAM_CHAT_ID", ""))
+
+    # 트리거 파일 경로도 .env에서 읽기 가능
+    if "TRIGGER_FILE" in env_vars and not os.environ.get("TRIGGER_FILE"):
+        trigger_file = Path(env_vars["TRIGGER_FILE"])
 
     # 로깅 설정
     log_dir = repo_path / "logs"
@@ -248,10 +289,11 @@ def main():
     state_file = repo_path / "logs" / ".watcher_state.json"
 
     logger.info("=" * 50)
-    logger.info("auto_pull_watcher 시작")
+    logger.info("auto_pull_watcher 시작 (v2 - 트리거 연동)")
     logger.info(f"  저장소: {repo_path}")
     logger.info(f"  감시 주기: {poll_interval}초")
     logger.info(f"  알림봇: {'설정됨' if telegram_token else '미설정'}")
+    logger.info(f"  트리거 파일: {trigger_file}")
     logger.info("=" * 50)
 
     # 초기 지시문 목록 로드
@@ -270,9 +312,10 @@ def main():
     if telegram_token and chat_id:
         send_telegram(
             telegram_token, chat_id,
-            "🔄 *auto\\_pull\\_watcher 시작*\n"
+            "🔄 *auto\\_pull\\_watcher v2 시작*\n"
             f"감시 주기: {poll_interval}초\n"
             f"저장소: `autotrade-core`\n"
+            f"트리거 연동: ✅ 활성\n"
             f"기존 지시문: {len(processed)}건 등록됨"
         )
 
@@ -299,7 +342,7 @@ def main():
                                 new_instructions.append(f)
                                 logger.info(f"새 지시문 발견: {f.name}")
 
-                    # 4. 새 지시문이 있으면 알림
+                    # 4. 새 지시문이 있으면 알림 + 트리거 생성
                     if new_instructions:
                         file_list = "\n".join(
                             [f"  📄 `{f.name}`" for f in new_instructions]
@@ -308,18 +351,22 @@ def main():
                             f"📥 *새 지시문 {len(new_instructions)}건 감지*\n\n"
                             f"{file_list}\n\n"
                             f"⏰ 감지 시각: {datetime.now().strftime('%H:%M:%S')}\n"
-                            f"🔄 자동 pull 완료, 지시문 확인 중..."
+                            f"🔄 자동 pull 완료\n"
+                            f"🚀 트리거 생성 → 아사 자동 실행 대기"
                         )
 
                         if telegram_token and chat_id:
                             send_telegram(telegram_token, chat_id, msg)
+
+                        # 트리거 파일 생성 → instruction_executor가 감지
+                        create_trigger(trigger_file, new_instructions, repo_path)
 
                         # 처리 목록에 추가
                         for f in new_instructions:
                             processed.add(f.name)
                         save_processed_list(state_file, processed)
 
-                        # 5. 지시문 내용을 stdout에 출력 (OpenClaw가 읽을 수 있도록)
+                        # 지시문 내용을 로그에 출력
                         for f in new_instructions:
                             logger.info(f"--- 지시문 내용: {f.name} ---")
                             content = f.read_text(encoding="utf-8")
@@ -331,7 +378,7 @@ def main():
                 else:
                     consecutive_errors += 1
             else:
-                # 변경 없음 - 5분마다 한 번 로그
+                # 변경 없음
                 pass
 
             # 에러 누적 시 알림

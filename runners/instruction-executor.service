@@ -1,0 +1,19 @@
+[Unit]
+Description=autotrade-core Instruction Executor (트리거 감시 및 자동 실행)
+After=auto-pull-watcher.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/autotrade-core
+ExecStart=%h/autotrade-core/venv/bin/python3 %h/autotrade-core/runners/instruction_executor.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# 환경변수
+Environment=EXECUTOR_INTERVAL=5
+Environment=TRIGGER_FILE=/tmp/autotrade_trigger.json
+
+[Install]
+WantedBy=default.target
