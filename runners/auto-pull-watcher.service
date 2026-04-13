@@ -1,0 +1,21 @@
+[Unit]
+Description=autotrade-core GitHub Auto Pull Watcher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/autotrade-core
+ExecStart=/home/%i/autotrade-core/venv/bin/python3 /home/%i/autotrade-core/runners/auto_pull_watcher.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# 환경변수 (필요시 override 가능)
+Environment=POLL_INTERVAL=30
+Environment=REPO_PATH=/home/%i/autotrade-core
+
+[Install]
+WantedBy=multi-user.target
