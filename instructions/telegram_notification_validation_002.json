@@ -1,0 +1,23 @@
+{
+  "task_id": "telegram_notification_validation_002",
+  "task_type": "report",
+  "instruction": "HD현대중공업 텔레그램 본문과 리포트 JSON이 왜 다른지 원본 파일 경로와 생성 함수를 파일 기준으로 추적해라. reports/json/329180_20260422_201407.json, reports/html/329180_20260422_201407.html, runners/local_report_simple.py, runners/watch_instructions.py를 확인하고, 텔레그램 본문이 어디서 생성됐는지 근거 파일 경로로만 보고하라.",
+  "input_files": [
+    "reports/json/329180_20260422_201407.json",
+    "reports/html/329180_20260422_201407.html",
+    "runners/local_report_simple.py",
+    "runners/watch_instructions.py",
+    "runners/report_pipeline.py"
+  ],
+  "status": "pending",
+  "created_at": "2026-04-22T20:33:24+09:00",
+  "metadata": {
+    "source_command": "handoff",
+    "parsed_intent": "telegram_notification_validation",
+    "target": "HD현대중공업",
+    "selected_skills": [
+      "handoff",
+      "telegram"
+    ]
+  }
+}
