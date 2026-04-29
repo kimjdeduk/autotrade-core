@@ -46,10 +46,10 @@
 <body>
   <div class="card">
     <h1>Top N 분석 리포트</h1>
-    <div class="meta">생성 시각: 2026-04-29T12:06:36+09:00</div>
+    <div class="meta">생성 시각: 2026-04-29T14:22:33+09:00</div>
     <pre># Top N 분석 리포트
 
-- 생성 시각: 2026-04-29T12:06:36+09:00
+- 생성 시각: 2026-04-29T14:22:33+09:00
 - mode: mid
 - cache_version: 3
 - top_n: 3
@@ -66,8 +66,8 @@
 - tier_summary: primary_pass 3, relaxed_pass 0, fallback_fill 0
 - entries_policy_note: fallback_fill excluded from entries; entries may be fewer than top_n
 - candidates_scored_note: candidates_scored retains fallback_fill for comparison
-- cache_hit_count: 0
-- cache_miss_count: 10
+- cache_hit_count: 4
+- cache_miss_count: 6
 
 ## Summary
 
@@ -93,15 +93,15 @@
 | 순위 | 종목명 | 코드 | 시장 | final_selection_tier | medium_candidate_score | entry_timing_score | raw_mode_score | adjusted_mode_score | adjustment_delta | 보정 여부 | total_score | decision | current_price | price_as_of | data_mode |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 기아 | 000270 | KOSPI | primary_pass | 61.99 | 26.33 | 37.15 | 47.15 | +10.00 | 보정 적용 | 40.80 | HOLD | 152600.00 | 2026-04-27 | previous_day |
-| 2 | 한미반도체 | 042700 | KOSPI | primary_pass | 63.69 | 0.00 | 46.10 | 46.10 | +0.00 | 보정 없음 | 43.70 | SKIP | 353000.00 | - | real_time |
+| 2 | 한미반도체 | 042700 | KOSPI | primary_pass | 63.69 | 0.00 | 46.10 | 46.10 | +0.00 | 보정 없음 | 43.70 | SKIP | 355000.00 | - | real_time |
 | 3 | SK스퀘어 | 402340 | KOSPI | primary_pass | 61.54 | 0.00 | 31.00 | 41.00 | +10.00 | 보정 적용 | 31.50 | HOLD | 789000.00 | 2026-04-27 | previous_day |
 
 ## Candidates Scored 해석
 
 - Top 3 그룹: 기아, 한미반도체, SK스퀘어
-- 아깝게 밀린 그룹: 씨아이에스, SK스퀘어, 기가비스
-- universe_score는 높지만 adjusted 기준으로 밀린 케이스: 한화오션 (universe 86.92, adjusted 34.25), SK하이닉스 (universe 94.51, adjusted 33.20)
-- 동점/tie-break 케이스: 41.00점: 씨아이에스, SK스퀘어, 기가비스
+- 아깝게 밀린 그룹: 기가비스, 씨아이에스, SK스퀘어
+- universe_score는 높지만 adjusted 기준으로 밀린 케이스: 한화오션 (universe 86.92, adjusted 33.50), SK하이닉스 (universe 94.51, adjusted 33.20)
+- 동점/tie-break 케이스: 41.00점: 씨아이에스, SK스퀘어
 - tier 요약: primary_pass 3, relaxed_pass 0, fallback_fill 0
 
 ## Candidates Scored
@@ -110,14 +110,14 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 ★ | 기아 | primary_pass | 61.99 | 26.33 | 87.04 | 37.15 | 47.15 | +10.00 | 보정 적용 | 40.80 | HOLD | 74.50 | 74.00 |
 | 2 ★ | 한미반도체 | primary_pass | 63.69 | 0.00 | 84.82 | 46.10 | 46.10 | +0.00 | 보정 없음 | 43.70 | SKIP | 38.00 | 86.00 |
-| 3 | 롯데쇼핑 | fallback_fill | 4.75 | 0.00 | 0.00 | 33.40 | 43.40 | +10.00 | 보정 적용 | 33.80 | SKIP | 70.00 | 62.00 |
-| 4 | 씨아이에스 | fallback_fill | 4.75 | 0.00 | 0.00 | 31.00 | 41.00 | +10.00 | 보정 적용 | 32.00 | SKIP | 70.00 | 50.00 |
-| 5 ★ | SK스퀘어 | primary_pass | 61.54 | 0.00 | 89.31 | 31.00 | 41.00 | +10.00 | 보정 적용 | 31.50 | HOLD | 70.00 | 50.00 |
-| 6 | 기가비스 | fallback_fill | 4.75 | 0.00 | 0.00 | 31.00 | 41.00 | +10.00 | 보정 적용 | 32.00 | SKIP | 70.00 | 50.00 |
+| 3 | 신세계 | fallback_fill | 5.50 | 0.00 | 0.00 | 34.30 | 44.30 | +10.00 | 보정 적용 | 34.85 | SKIP | 73.00 | 62.00 |
+| 4 | 기가비스 | fallback_fill | 5.00 | 0.00 | 0.00 | 31.30 | 41.30 | +10.00 | 보정 적용 | 32.35 | SKIP | 71.00 | 50.00 |
+| 5 | 씨아이에스 | fallback_fill | 4.75 | 0.00 | 0.00 | 31.00 | 41.00 | +10.00 | 보정 적용 | 32.00 | SKIP | 70.00 | 50.00 |
+| 6 ★ | SK스퀘어 | primary_pass | 61.54 | 0.00 | 89.31 | 31.00 | 41.00 | +10.00 | 보정 적용 | 31.50 | HOLD | 70.00 | 50.00 |
 | 7 | 삼성전자 | primary_pass | 58.16 | 35.44 | 88.32 | 40.70 | 40.70 | +0.00 | 보정 없음 | 44.65 | HOLD | 36.00 | 62.00 |
-| 8 | 한화오션 | primary_pass | 53.20 | 17.89 | 86.92 | 24.25 | 34.25 | +10.00 | 보정 적용 | 23.12 | SKIP | 39.50 | 62.00 |
+| 8 | 한화오션 | primary_pass | 61.66 | 33.44 | 86.92 | 23.50 | 33.50 | +10.00 | 보정 적용 | 22.25 | SKIP | 37.00 | 62.00 |
 | 9 | SK하이닉스 | primary_pass | 57.42 | 21.44 | 94.51 | 23.20 | 33.20 | +10.00 | 보정 적용 | 28.90 | HOLD | 36.00 | 62.00 |
-| 10 | 신세계 | fallback_fill | 0.00 | 0.00 | 0.00 | 12.40 | 22.40 | +10.00 | 보정 적용 | 9.30 | SKIP | 0.00 | 62.00 |
+| 10 | 롯데쇼핑 | fallback_fill | 0.00 | 0.00 | 0.00 | 12.40 | 22.40 | +10.00 | 보정 적용 | 9.30 | SKIP | 0.00 | 62.00 |
 
 - 보정 비율: 8 / 10 (80%)
 - 동일 adjusted_mode_score일 경우 내부 tie-break 규칙(예: stock_code 순 등)에 따라 순서가 결정됩니다.
@@ -126,8 +126,8 @@
 ## Summary
 
 - entries_count: 3
-- cache_hit_count: 0
-- cache_miss_count: 10
+- cache_hit_count: 4
+- cache_miss_count: 6
 - average_score(adjusted_mode_score 기준): 44.75
 - medium_candidate_score: 후보점수
 - entry_timing_score: 진입점수
