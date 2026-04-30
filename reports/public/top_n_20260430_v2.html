@@ -46,14 +46,14 @@
 <body>
   <div class="card">
     <h1>Top N 분석 리포트</h1>
-    <div class="meta">생성 시각: 2026-04-30T12:57:40+09:00</div>
+    <div class="meta">생성 시각: 2026-04-30T13:01:38+09:00</div>
     <pre># Top N 분석 리포트
 
-- 생성 시각: 2026-04-30T12:57:40+09:00
+- 생성 시각: 2026-04-30T13:01:38+09:00
 - mode: mid
 - cache_version: 7
 - top_n: 10
-- candidate_limit: 20
+- candidate_limit: 10
 - market: both
 - 필터 조건: market_cap &gt;= 10000.00, per &gt; 0, close &gt; 0
 - score_basis: medium_candidate_score
@@ -66,11 +66,11 @@
 - data_note: data_mode / price_mode는 데이터 제한 상태 확인용
 - score_role_note: 수급/테마 상태는 참고용이며 후보 점수 정렬에는 직접 반영되지 않습니다.
 - ohlcv_note: OHLCV 비활성 시 chart 점수 제외 가능
-- tier_summary: primary_pass 10, relaxed_pass 0, fallback_fill 0
+- tier_summary: primary_pass 6, relaxed_pass 0, fallback_fill 0
 - entries_policy_note: fallback_fill excluded from entries; entries may be fewer than top_n
 - candidates_scored_note: candidates_scored retains fallback_fill for comparison
-- cache_hit_count: 11
-- cache_miss_count: 9
+- cache_hit_count: 0
+- cache_miss_count: 10
 
 ## Summary
 
@@ -80,10 +80,10 @@
 - 종합 판단 점수: total_score
 - 진입점수: entry_timing_score
 - 진입상태: entry_timing_label
-- raw 기반 종목 수: 20 / 20
-- 보정 기반 종목 수: 0 / 20
-- 보정 비율: 0 / 20 (0%)
-- tier 요약: primary_pass 10, relaxed_pass 0, fallback_fill 0
+- raw 기반 종목 수: 10 / 10
+- 보정 기반 종목 수: 0 / 10
+- 보정 비율: 0 / 10 (0%)
+- tier 요약: primary_pass 6, relaxed_pass 0, fallback_fill 0
 - entries 정책: fallback_fill excluded from entries; entries may be fewer than top_n
 - candidates_scored 정책: candidates_scored retains fallback_fill for comparison
 - 핵심 주의점: data_mode / price_mode는 데이터 제한 상태 확인용; OHLCV 비활성 시 chart 점수 제외 가능; 동일 점수 구간에서는 순위가 바뀔 수 있습니다.
@@ -91,68 +91,54 @@
 
 ## 중기 후보 Top 3
 
-- 1. 현대차: 후보 61.60 / 타이밍 40.45 / 종합 45.60 · raw 40.45 → adjusted 40.45 (+0.00, 보정 없음) · 보정 없이 raw 점수가 그대로 유지된 케이스 / chart 77.50 / dart 86.00 / flow 0.00 / theme 0.00 / flow data 없음 / 수급 점수 미반영 / theme data 없음 / 테마 점수 미반영
-- 2. 현대로템: 후보 60.65 / 타이밍 42.20 / 종합 49.80 · raw 42.20 → adjusted 42.20 (+0.00, 보정 없음) · 보정 없이 raw 점수가 그대로 유지된 케이스 / chart 74.00 / dart 100.00 / flow 0.00 / theme 0.00 / flow data 없음 / 수급 점수 미반영 / theme data 없음 / 테마 점수 미반영
-- 3. HD현대중공업: 후보 60.16 / 타이밍 34.30 / 종합 36.30 · raw 34.30 → adjusted 34.30 (+0.00, 보정 없음) · 보정 없이 raw 점수가 그대로 유지된 케이스 / chart 73.00 / dart 62.00 / flow 0.00 / theme 0.00 / flow data 없음 / 수급 점수 미반영 / theme data 없음 / 테마 점수 미반영
+- 1. 한미반도체: 후보 62.66 / 타이밍 56.90 / 종합 60.65 · raw 56.90 → adjusted 56.90 (+0.00, 보정 없음) · 보정 없이 raw 점수가 그대로 유지된 케이스 / chart 74.00 / dart 86.00 / flow 35.00 / theme 35.00
+- 2. 삼성전자: 후보 58.96 / 타이밍 50.90 / 종합 51.30 · raw 50.90 → adjusted 50.90 (+0.00, 보정 없음) · 보정 없이 raw 점수가 그대로 유지된 케이스 / chart 70.00 / dart 62.00 / flow 35.00 / theme 35.00
+- 3. SK하이닉스: 후보 57.30 / 타이밍 34.30 / 종합 69.70 · raw 68.60 → adjusted 34.30 (-34.30, 보정 없음) · 보정 없이 raw 점수가 그대로 유지된 케이스 / chart 73.00 / dart 62.00 / flow 0.00 / theme 0.00 / flow data 없음 / 수급 점수 미반영 / theme data 없음 / 테마 점수 미반영
 
 ## Entries
 
 | 순위 | 종목명 | 코드 | 시장 | final_selection_tier | 후보 점수(medium_candidate_score) | entry_timing_score | 진입상태 | 기준가격 | raw_mode_score | 타이밍 참고 점수(adjusted_mode_score) | adjustment_delta | 보정 여부 | 종합 판단 점수(total_score) | decision | current_price | price_as_of | data_mode | flow_data_state | theme_data_state |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 현대차 | 005380 | KOSPI | primary_pass | 61.60 | 49.75 | 관찰 / 조건부 진입 | 556000.00 | 40.45 | 40.45 | +0.00 | 보정 없음 | 45.60 | HOLD | 556000.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 2 | 현대로템 | 064350 | KOSPI | primary_pass | 60.65 | 20.00 | 추격 금지 / 눌림 대기 | 264000.00 | 42.20 | 42.20 | +0.00 | 보정 없음 | 49.80 | HOLD | 264000.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 3 | HD현대중공업 | 329180 | KOSPI | primary_pass | 60.16 | 20.00 | 추격 금지 / 눌림 대기 | 690000.00 | 34.30 | 34.30 | +0.00 | 보정 없음 | 36.30 | HOLD | 690000.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 4 | KB금융 | 105560 | KOSPI | primary_pass | 59.62 | 48.03 | 관찰 / 조건부 진입 | 160600.00 | 36.25 | 36.25 | +0.00 | 보정 없음 | 40.20 | HOLD | 160600.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 5 | 하나금융지주 | 086790 | KOSPI | primary_pass | 58.85 | 36.44 | 관찰 / 조건부 진입 | 127100.00 | 33.40 | 33.40 | +0.00 | 보정 없음 | 35.70 | HOLD | 127100.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 6 | 신한지주 | 055550 | KOSPI | primary_pass | 58.72 | 46.44 | 관찰 / 조건부 진입 | 100000.00 | 33.40 | 33.40 | +0.00 | 보정 없음 | 35.70 | HOLD | 100000.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 7 | 한미반도체 | 042700 | KOSPI | primary_pass | 54.95 | 20.00 | 추격 금지 / 눌림 대기 | 357500.00 | 56.90 | 56.90 | +0.00 | 보정 없음 | 60.65 | HOLD | 357500.00 | 2026-04-29 | previous_day | available | available |
-| 8 | 우리금융지주 | 316140 | KOSPI | primary_pass | 54.90 | 45.00 | 관찰 / 조건부 진입 | 33500.00 | 25.00 | 25.00 | +0.00 | 보정 없음 | 32.70 | HOLD | 33500.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 9 | 삼성중공업 | 010140 | KOSPI | primary_pass | 51.84 | 36.04 | 관찰 / 조건부 진입 | 33000.00 | 24.70 | 24.70 | +0.00 | 보정 없음 | 29.90 | HOLD | 33000.00 | 2026-04-29 | previous_day | no_data | no_data |
-| 10 | 한국전력 | 015760 | KOSPI | primary_pass | 51.44 | 34.15 | 추격 금지 / 눌림 대기 | 44500.00 | 20.95 | 20.95 | +0.00 | 보정 없음 | 24.80 | HOLD | 44500.00 | 2026-04-29 | previous_day | no_data | no_data |
+| 1 | 한미반도체 | 042700 | KOSPI | primary_pass | 62.66 | 20.00 | 추격 금지 / 눌림 대기 | 357500.00 | 56.90 | 56.90 | +0.00 | 보정 없음 | 60.65 | HOLD | 357500.00 | 2026-04-29 | previous_day | available | available |
+| 2 | 삼성전자 | 005930 | KOSPI | primary_pass | 58.96 | 46.44 | 관찰 / 조건부 진입 | 224500.00 | 50.90 | 50.90 | +0.00 | 보정 없음 | 51.30 | HOLD | 224500.00 | - | real_time | available | available |
+| 3 | SK하이닉스 | 000660 | KOSPI | primary_pass | 57.30 | 20.00 | 추격 금지 / 눌림 대기 | 1305000.00 | 68.60 | 34.30 | -34.30 | 보정 없음 | 69.70 | BUY | 1305000.00 | - | real_time | no_data | no_data |
+| 4 | SK스퀘어 | 402340 | KOSPI | primary_pass | 54.46 | 20.00 | 추격 금지 / 눌림 대기 | 856000.00 | 63.80 | 31.90 | -31.90 | 보정 없음 | 66.10 | BUY | 856000.00 | - | real_time | no_data | no_data |
+| 5 | 기아 | 000270 | KOSPI | primary_pass | 51.11 | 37.43 | 관찰 / 조건부 진입 | 153400.00 | 53.90 | 26.95 | -26.95 | 보정 없음 | 50.55 | HOLD | 153400.00 | - | real_time | no_data | no_data |
+| 6 | 한화오션 | 042660 | KOSPI | primary_pass | 49.68 | 36.19 | 관찰 / 조건부 진입 | 131700.00 | 50.30 | 25.15 | -25.15 | 보정 없음 | 48.35 | HOLD | 131700.00 | - | real_time | no_data | no_data |
 
 ## Candidates Scored 해석
 
-- Top 3 그룹: 현대차, 현대로템, HD현대중공업
-- 아깝게 밀린 그룹: KB금융, 하나금융지주, 신한지주
-- universe_score는 높지만 adjusted 기준으로 밀린 케이스: SK하이닉스 (universe 94.51, adjusted 34.30), SK스퀘어 (universe 89.31, adjusted 31.90), 기아 (universe 87.04, adjusted 26.95), 한화오션 (universe 86.92, adjusted 25.15)
-- 동점/tie-break 케이스: 34.30점: HD현대중공업, SK하이닉스, 신세계, 롯데쇼핑, 33.40점: 하나금융지주, 신한지주, 31.90점: SK스퀘어, 기가비스
-- tier 요약: primary_pass 10, relaxed_pass 0, fallback_fill 0
+- Top 3 그룹: 한미반도체, 삼성전자, SK하이닉스
+- 아깝게 밀린 그룹: SK스퀘어, 기아, 한화오션
+- universe_score는 높지만 adjusted 기준으로 밀린 케이스: SK스퀘어 (universe 89.31, adjusted 31.90), 기아 (universe 87.04, adjusted 26.95), 한화오션 (universe 86.92, adjusted 25.15)
+- 동점/tie-break 케이스: 34.30점: SK하이닉스, 롯데쇼핑, 31.90점: SK스퀘어, 기가비스
+- tier 요약: primary_pass 6, relaxed_pass 0, fallback_fill 0
 
 ## Candidates Scored
 
 | 순위 | 종목명 | final_selection_tier | 후보 점수(medium_candidate_score) | entry_timing_score | 진입상태 | 기준가격 | universe_score | raw_mode_score | 타이밍 참고 점수(adjusted_mode_score) | adjustment_delta | 보정 여부 | 종합 판단 점수(total_score) | decision | chart | dart |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 ★ | 현대차 | primary_pass | 61.60 | 49.75 | 관찰 / 조건부 진입 | 556000.00 | 83.25 | 40.45 | 40.45 | +0.00 | 보정 없음 | 45.60 | HOLD | 77.50 | 86.00 |
-| 2 ★ | 현대로템 | primary_pass | 60.65 | 20.00 | 추격 금지 / 눌림 대기 | 264000.00 | 82.99 | 42.20 | 42.20 | +0.00 | 보정 없음 | 49.80 | HOLD | 74.00 | 100.00 |
-| 3 ★ | HD현대중공업 | primary_pass | 60.16 | 20.00 | 추격 금지 / 눌림 대기 | 690000.00 | 82.21 | 34.30 | 34.30 | +0.00 | 보정 없음 | 36.30 | HOLD | 73.00 | 62.00 |
-| 4 ★ | KB금융 | primary_pass | 59.62 | 48.03 | 관찰 / 조건부 진입 | 160600.00 | 81.66 | 36.25 | 36.25 | +0.00 | 보정 없음 | 40.20 | HOLD | 71.50 | 74.00 |
-| 5 ★ | 하나금융지주 | primary_pass | 58.85 | 36.44 | 관찰 / 조건부 진입 | 127100.00 | 80.35 | 33.40 | 33.40 | +0.00 | 보정 없음 | 35.70 | HOLD | 70.00 | 62.00 |
-| 6 ★ | 신한지주 | primary_pass | 58.72 | 46.44 | 관찰 / 조건부 진입 | 100000.00 | 79.91 | 33.40 | 33.40 | +0.00 | 보정 없음 | 35.70 | HOLD | 70.00 | 62.00 |
-| 7 ★ | 한미반도체 | primary_pass | 54.95 | 20.00 | 추격 금지 / 눌림 대기 | 357500.00 | 84.82 | 56.90 | 56.90 | +0.00 | 보정 없음 | 60.65 | HOLD | 74.00 | 86.00 |
-| 8 ★ | 우리금융지주 | primary_pass | 54.90 | 45.00 | 관찰 / 조건부 진입 | 33500.00 | 82.54 | 25.00 | 25.00 | +0.00 | 보정 없음 | 32.70 | HOLD | 34.00 | 74.00 |
-| 9 ★ | 삼성중공업 | primary_pass | 51.84 | 36.04 | 관찰 / 조건부 진입 | 33000.00 | 81.13 | 24.70 | 24.70 | +0.00 | 보정 없음 | 29.90 | HOLD | 41.00 | 62.00 |
-| 10 ★ | 한국전력 | primary_pass | 51.44 | 34.15 | 추격 금지 / 눌림 대기 | 44500.00 | 83.56 | 20.95 | 20.95 | +0.00 | 보정 없음 | 24.80 | HOLD | 36.50 | 50.00 |
-| 11 | 미래에셋증권 | primary_pass | 51.29 | 35.59 | 관찰 / 조건부 진입 | 67700.00 | 83.05 | 23.35 | 23.35 | +0.00 | 보정 없음 | 29.00 | HOLD | 36.50 | 62.00 |
-| 12 | 삼성전자 | primary_pass | 49.15 | 46.44 | 관찰 / 조건부 진입 | 225000.00 | 88.32 | 50.90 | 50.90 | +0.00 | 보정 없음 | 51.30 | HOLD | 70.00 | 62.00 |
-| 13 | SK하이닉스 | primary_pass | 30.65 | 20.00 | 추격 금지 / 눌림 대기 | 1306000.00 | 94.51 | 68.60 | 34.30 | -34.30 | 보정 없음 | 69.70 | BUY | 73.00 | 62.00 |
-| 14 | 신세계 | fallback_fill | 30.65 | 0.00 | 진입 부적합 | 417500.00 | 0.00 | 68.60 | 34.30 | -34.30 | 보정 없음 | 69.70 | BUY | 73.00 | 62.00 |
-| 15 | 롯데쇼핑 | fallback_fill | 30.65 | 0.00 | 진입 부적합 | 140900.00 | 0.00 | 68.60 | 34.30 | -34.30 | 보정 없음 | 69.70 | BUY | 73.00 | 62.00 |
-| 16 | SK스퀘어 | primary_pass | 28.25 | 20.00 | 추격 금지 / 눌림 대기 | 856000.00 | 89.31 | 63.80 | 31.90 | -31.90 | 보정 없음 | 66.10 | BUY | 73.00 | 50.00 |
-| 17 | 기가비스 | fallback_fill | 28.25 | 0.00 | 진입 부적합 | 105200.00 | 0.00 | 63.80 | 31.90 | -31.90 | 보정 없음 | 66.10 | BUY | 73.00 | 50.00 |
-| 18 | 기아 | primary_pass | 24.93 | 37.43 | 관찰 / 조건부 진입 | 153400.00 | 87.04 | 53.90 | 26.95 | -26.95 | 보정 없음 | 50.55 | HOLD | 40.50 | 74.00 |
-| 19 | 한화오션 | primary_pass | 23.02 | 36.19 | 관찰 / 조건부 진입 | 131700.00 | 86.92 | 50.30 | 25.15 | -25.15 | 보정 없음 | 48.35 | HOLD | 42.50 | 62.00 |
-| 20 | 씨아이에스 | fallback_fill | 20.25 | 0.00 | 진입 부적합 | 17480.00 | 0.00 | 44.60 | 22.30 | -22.30 | 보정 없음 | 43.70 | SKIP | 41.00 | 50.00 |
+| 1 ★ | 한미반도체 | primary_pass | 62.66 | 20.00 | 추격 금지 / 눌림 대기 | 357500.00 | 84.82 | 56.90 | 56.90 | +0.00 | 보정 없음 | 60.65 | HOLD | 74.00 | 86.00 |
+| 2 ★ | 삼성전자 | primary_pass | 58.96 | 46.44 | 관찰 / 조건부 진입 | 224500.00 | 88.32 | 50.90 | 50.90 | +0.00 | 보정 없음 | 51.30 | HOLD | 70.00 | 62.00 |
+| 3 ★ | SK하이닉스 | primary_pass | 57.30 | 20.00 | 추격 금지 / 눌림 대기 | 1305000.00 | 94.51 | 68.60 | 34.30 | -34.30 | 보정 없음 | 69.70 | BUY | 73.00 | 62.00 |
+| 4 ★ | SK스퀘어 | primary_pass | 54.46 | 20.00 | 추격 금지 / 눌림 대기 | 856000.00 | 89.31 | 63.80 | 31.90 | -31.90 | 보정 없음 | 66.10 | BUY | 73.00 | 50.00 |
+| 5 ★ | 기아 | primary_pass | 51.11 | 37.43 | 관찰 / 조건부 진입 | 153400.00 | 87.04 | 53.90 | 26.95 | -26.95 | 보정 없음 | 50.55 | HOLD | 40.50 | 74.00 |
+| 6 ★ | 한화오션 | primary_pass | 49.68 | 36.19 | 관찰 / 조건부 진입 | 131700.00 | 86.92 | 50.30 | 25.15 | -25.15 | 보정 없음 | 48.35 | HOLD | 42.50 | 62.00 |
+| 7 | 신세계 | fallback_fill | 39.00 | 0.00 | 진입 부적합 | 416500.00 | 0.00 | 70.40 | 35.20 | -35.20 | 보정 없음 | 71.80 | BUY | 76.00 | 62.00 |
+| 8 | 롯데쇼핑 | fallback_fill | 38.40 | 0.00 | 진입 부적합 | 140500.00 | 0.00 | 68.60 | 34.30 | -34.30 | 보정 없음 | 69.70 | BUY | 73.00 | 62.00 |
+| 9 | 기가비스 | fallback_fill | 36.60 | 0.00 | 진입 부적합 | 105200.00 | 0.00 | 63.80 | 31.90 | -31.90 | 보정 없음 | 66.10 | BUY | 73.00 | 50.00 |
+| 10 | 씨아이에스 | fallback_fill | 30.20 | 0.00 | 진입 부적합 | 18650.00 | 0.00 | 44.60 | 22.30 | -22.30 | 보정 없음 | 46.73 | HOLD | 41.00 | 50.00 |
 
-- 보정 비율: 0 / 20 (0%)
+- 보정 비율: 0 / 10 (0%)
 - 동일 adjusted_mode_score일 경우 내부 tie-break 규칙(예: stock_code 순 등)에 따라 순서가 결정됩니다.
 - 동일 점수 구간에서는 순위가 고정되지 않을 수 있습니다.
 
 ## Summary
 
-- entries_count: 10
-- cache_hit_count: 11
-- cache_miss_count: 9
-- average_score(기존 adjusted_mode_score 기준): 34.76
+- entries_count: 6
+- cache_hit_count: 0
+- cache_miss_count: 10
+- average_score(기존 adjusted_mode_score 기준): 37.68
 - 후보 점수(score_primary): medium_candidate_score
 - 타이밍 참고 점수(score_timing): adjusted_mode_score
 - 종합 판단 점수(score_final): total_score
@@ -174,9 +160,9 @@
 - theme_data_state: no_data|available
 - theme_score_state: no_data|raw_zero|available
 - SKIP excluded from Top 3
-- decision_distribution: HOLD: 10
-- top_stock: 현대차 (005380)
-- top_score: 61.60
+- decision_distribution: BUY: 2, HOLD: 4
+- top_stock: 한미반도체 (042700)
+- top_score: 62.66
 - 동일 점수 구간에서는 순위가 바뀔 수 있습니다.
 </pre>
   </div>
