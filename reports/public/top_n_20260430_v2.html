@@ -232,11 +232,11 @@
       background: rgba(124, 58, 237, 0.12);
       color: #5b21b6;
     }
-    .chip-available {
+    .chip-state-ok {
       background: rgba(15, 118, 110, 0.12);
       color: #0f766e;
     }
-    .chip-no_data {
+    .chip-state-none {
       background: rgba(159, 18, 57, 0.12);
       color: var(--warn);
     }
@@ -377,10 +377,10 @@
         <h2>데이터 상태</h2>
         <p>수급 / 테마 가용성을 빠르게 확인할 수 있습니다.</p>
         <div class="chips" style="margin-top:14px;">
-          <span class="chip chip-available">수급 있음 2/10</span>
-          <span class="chip chip-available">테마 있음 8/10</span>
-          <span class="chip chip-available">캐시 사용 10</span>
-          <span class="chip chip-no_data">캐시 미사용 0</span>
+          <span class="chip chip-state-ok">수급 있음 2/10</span>
+          <span class="chip chip-state-ok">테마 있음 8/10</span>
+          <span class="chip chip-state-ok">캐시 사용 10</span>
+          <span class="chip chip-state-none">캐시 미사용 0</span>
         </div>
         <div class="note">상위 진입 후보 정책: 보충 후보는 entries에서 제외되며 entries 수는 top_n보다 적을 수 있습니다</div>
         <div class="note">전체 후보 목록 정책: 전체 후보 점수표는 비교를 위해 보충 후보를 유지합니다</div>
