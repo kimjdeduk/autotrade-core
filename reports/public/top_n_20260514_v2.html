@@ -365,10 +365,10 @@
       <article class="card summary-card">
         <h2>요약 카드</h2>
         <ul class="bullets">
-          <li>이번 결과는 중기 점수(mid_term_score) 기준으로 정렬로 정렬됩니다.</li>
+          <li>이번 결과는 Top N main ranking uses candidate_quality_score = mid_term_score 60% + universe_score 25% + total_score 15%; entry_timing_score is reference only.로 정렬됩니다.</li>
           <li>중기 점수는 후보 랭킹용 점수이고, 진입 타이밍 점수는 보조 기준입니다.</li>
           <li>이 리포트는 단기 타이밍이 아닌, 중기 관점에서 반복 등장/점수 안정성/추세를 기반으로 후보를 선정합니다.</li>
-          <li>중기 후보 상위 3종목: 한미반도체, 기아, 삼성전자</li>
+          <li>중기 후보 상위 3종목: 기아, 한미반도체, 삼성전자</li>
           <li>데이터 기준 안내: 데이터 제한 상태 확인용 · OHLCV 비활성 시 차트 점수 제외 가능</li>
           <li>전일 데이터 기준 해석 시 전일 기준 전제입니다.</li>
         </ul>
@@ -383,7 +383,7 @@
           <span class="chip chip-state-ok">캐시 사용 4</span>
           <span class="chip chip-state-none">캐시 미사용 6</span>
         </div>
-        <div class="note">상위 진입 후보 정책: 보충 후보는 상위 진입 후보에서 제외되며 상위 진입 후보 수는 상위 종목 수보다 적을 수 있습니다</div>
+        <div class="note">상위 진입 후보 정책: SKIP/fallback_fill 종목은 메인 Top N에서 제외되며 상위 진입 후보 수는 상위 종목 수보다 적을 수 있습니다</div>
         <div class="note">전체 후보 목록 정책: 전체 후보 목록은 비교를 위해 보충 후보를 유지합니다</div>
       </article>
 
@@ -391,7 +391,7 @@
         <h2>중기 후보 상위 3종목</h2>
         <p>현재 선택된 상위 종목을 카드로 보여줍니다.</p>
         <div class="placeholder">
-            <strong>한미반도체, 기아, 삼성전자</strong>
+            <strong>기아, 한미반도체, 삼성전자</strong>
           <div class="subtle">중기 점수 기준 상위 종목입니다.</div>
         </div>
       </article>
@@ -403,35 +403,6 @@
         <article class="stock-card">
           <div class="card-head">
             <span class="rank-badge">#1</span>
-            <span class="tier-badge">1차 통과</span>
-          </div>
-          <h3>한미반도체</h3>
-          <div class="card-sub">042700 · KOSPI</div>
-          <div class="metric-grid">
-            <div class="metric"><span class="label">중기 점수</span><span class="value">61.42</span></div>
-            <div class="metric"><span class="label">리스크 패널티</span><span class="value">0.00</span></div>
-            <div class="metric"><span class="label">진입상태</span><span class="value">추격 금지 / 눌림 대기</span></div>
-            <div class="metric"><span class="label">종합 점수</span><span class="value">61.85</span></div>
-            <div class="metric"><span class="label">기준가격</span><span class="value">409,500</span></div>
-            <div class="metric"><span class="label">진입 타이밍 참고 점수</span><span class="value">62.05</span></div>
-          </div>
-          <div class="metric-grid" style="margin-top:12px;">
-            <div class="metric"><span class="label">Top N 편입일</span><span class="value">2026-04-30</span></div>
-            <div class="metric"><span class="label">편입 기준가격</span><span class="value">357,500</span></div>
-            <div class="metric"><span class="label">현재 기준가격</span><span class="value">409,500</span></div>
-            <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">+14.55%</span></div>
-            <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">4</span></div>
-          </div>
-          <div class="note" style="margin-top:12px;">
-            점수 이유 · 기업(dart) 74.00 / 테마(theme) 70.00 / 차트(chart) 70.00 / 수급(flow) 35.00 / 리스크 없음
-          </div>
-          <div class="note">수급/테마 데이터 정상</div>
-          <div class="chips"><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></div>
-        </article>
-        
-        <article class="stock-card">
-          <div class="card-head">
-            <span class="rank-badge">#2</span>
             <span class="tier-badge">1차 통과</span>
           </div>
           <h3>기아</h3>
@@ -456,6 +427,35 @@
           </div>
           <div class="note">⚠️ 수급 데이터 없음</div>
           <div class="chips"><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></div>
+        </article>
+        
+        <article class="stock-card">
+          <div class="card-head">
+            <span class="rank-badge">#2</span>
+            <span class="tier-badge">1차 통과</span>
+          </div>
+          <h3>한미반도체</h3>
+          <div class="card-sub">042700 · KOSPI</div>
+          <div class="metric-grid">
+            <div class="metric"><span class="label">중기 점수</span><span class="value">61.42</span></div>
+            <div class="metric"><span class="label">리스크 패널티</span><span class="value">0.00</span></div>
+            <div class="metric"><span class="label">진입상태</span><span class="value">추격 금지 / 눌림 대기</span></div>
+            <div class="metric"><span class="label">종합 점수</span><span class="value">61.85</span></div>
+            <div class="metric"><span class="label">기준가격</span><span class="value">409,500</span></div>
+            <div class="metric"><span class="label">진입 타이밍 참고 점수</span><span class="value">62.05</span></div>
+          </div>
+          <div class="metric-grid" style="margin-top:12px;">
+            <div class="metric"><span class="label">Top N 편입일</span><span class="value">2026-04-30</span></div>
+            <div class="metric"><span class="label">편입 기준가격</span><span class="value">357,500</span></div>
+            <div class="metric"><span class="label">현재 기준가격</span><span class="value">409,500</span></div>
+            <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">+14.55%</span></div>
+            <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">4</span></div>
+          </div>
+          <div class="note" style="margin-top:12px;">
+            점수 이유 · 기업(dart) 74.00 / 테마(theme) 70.00 / 차트(chart) 70.00 / 수급(flow) 35.00 / 리스크 없음
+          </div>
+          <div class="note">수급/테마 데이터 정상</div>
+          <div class="chips"><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></div>
         </article>
         
         <article class="stock-card">
@@ -515,7 +515,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="top-row"><td>1</td><td><strong>한미반도체</strong><div class='subtle'>KOSPI</div></td><td>042700</td><td>61.42</td><td>0.00</td><td>67.75</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>409,500</td><td>62.05</td><td>61.85</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="top-row"><td>2</td><td><strong>기아</strong><div class='subtle'>KOSPI</div></td><td>000270</td><td>58.07</td><td>0.00</td><td>72.26</td><td>29.40</td><td>추격 금지 / 눌림 대기</td><td>178,100</td><td>59.70</td><td>77.87</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="top-row"><td>3</td><td><strong>삼성전자</strong><div class='subtle'>KOSPI</div></td><td>005930</td><td>49.90</td><td>0.00</td><td>64.00</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>296,000</td><td>57.25</td><td>58.25</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>4</td><td><strong>신세계</strong><div class='subtle'>KOSPI</div></td><td>004170</td><td>47.00</td><td>0.00</td><td>40.65</td><td>0.00</td><td>진입 부적합</td><td>535,000</td><td>53.60</td><td>71.27</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class=""><td>5</td><td><strong>SK스퀘어</strong><div class='subtle'>KOSPI</div></td><td>402340</td><td>37.06</td><td>0.00</td><td>62.54</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,190,000</td><td>48.50</td><td>62.22</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>6</td><td><strong>롯데쇼핑</strong><div class='subtle'>KOSPI</div></td><td>023530</td><td>36.75</td><td>0.00</td><td>32.07</td><td>0.00</td><td>진입 부적합</td><td>175,700</td><td>40.70</td><td>59.33</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class=""><td>7</td><td><strong>SK하이닉스</strong><div class='subtle'>KOSPI</div></td><td>000660</td><td>34.09</td><td>0.00</td><td>60.60</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,976,000</td><td>39.75</td><td>48.61</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 fallback_stale</span></td><td>1차 통과</td></tr><tr class=""><td>8</td><td><strong>한화오션</strong><div class='subtle'>KOSPI</div></td><td>042660</td><td>33.63</td><td>0.00</td><td>57.23</td><td>35.44</td><td>관찰 / 조건부 진입</td><td>120,400</td><td>31.65</td><td>40.40</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>9</td><td><strong>기가비스</strong><div class='subtle'>KOSDAQ</div></td><td>420770</td><td>25.75</td><td>0.00</td><td>28.85</td><td>0.00</td><td>진입 부적합</td><td>106,700</td><td>31.30</td><td>57.64</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>10</td><td><strong>씨아이에스</strong><div class='subtle'>KOSDAQ</div></td><td>222080</td><td>21.52</td><td>0.00</td><td>25.50</td><td>0.00</td><td>진입 부적합</td><td>14,430</td><td>21.25</td><td>45.45</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr>
+            <tr class="top-row"><td>1</td><td><strong>기아</strong><div class='subtle'>KOSPI</div></td><td>000270</td><td>58.07</td><td>0.00</td><td>72.26</td><td>29.40</td><td>추격 금지 / 눌림 대기</td><td>178,100</td><td>59.70</td><td>77.87</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="top-row"><td>2</td><td><strong>한미반도체</strong><div class='subtle'>KOSPI</div></td><td>042700</td><td>61.42</td><td>0.00</td><td>67.75</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>409,500</td><td>62.05</td><td>61.85</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="top-row"><td>3</td><td><strong>삼성전자</strong><div class='subtle'>KOSPI</div></td><td>005930</td><td>49.90</td><td>0.00</td><td>64.00</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>296,000</td><td>57.25</td><td>58.25</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>4</td><td><strong>SK스퀘어</strong><div class='subtle'>KOSPI</div></td><td>402340</td><td>37.06</td><td>0.00</td><td>62.54</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,190,000</td><td>48.50</td><td>62.22</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>5</td><td><strong>SK하이닉스</strong><div class='subtle'>KOSPI</div></td><td>000660</td><td>34.09</td><td>0.00</td><td>60.60</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,976,000</td><td>39.75</td><td>48.61</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 fallback_stale</span></td><td>1차 통과</td></tr><tr class=""><td>6</td><td><strong>한화오션</strong><div class='subtle'>KOSPI</div></td><td>042660</td><td>33.63</td><td>0.00</td><td>57.23</td><td>35.44</td><td>관찰 / 조건부 진입</td><td>120,400</td><td>31.65</td><td>40.40</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>7</td><td><strong>신세계</strong><div class='subtle'>KOSPI</div></td><td>004170</td><td>47.00</td><td>0.00</td><td>40.65</td><td>0.00</td><td>진입 부적합</td><td>482,500</td><td>53.60</td><td>71.78</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>8</td><td><strong>롯데쇼핑</strong><div class='subtle'>KOSPI</div></td><td>023530</td><td>36.75</td><td>0.00</td><td>32.07</td><td>0.00</td><td>진입 부적합</td><td>175,700</td><td>40.70</td><td>59.33</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>9</td><td><strong>기가비스</strong><div class='subtle'>KOSDAQ</div></td><td>420770</td><td>25.75</td><td>0.00</td><td>28.85</td><td>0.00</td><td>진입 부적합</td><td>106,700</td><td>31.30</td><td>57.64</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>10</td><td><strong>씨아이에스</strong><div class='subtle'>KOSDAQ</div></td><td>222080</td><td>21.52</td><td>0.00</td><td>25.50</td><td>0.00</td><td>진입 부적합</td><td>14,430</td><td>21.25</td><td>45.45</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr>
           </tbody>
         </table>
       </div>
@@ -547,7 +547,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class=""><td>1</td><td><strong>한미반도체</strong></td><td>042700</td><td>61.42</td><td>0.00</td><td>67.75</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>409,500</td><td>62.05</td><td>61.85</td><td>HOLD</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>2</td><td><strong>기아</strong></td><td>000270</td><td>58.07</td><td>0.00</td><td>72.26</td><td>29.40</td><td>추격 금지 / 눌림 대기</td><td>178,100</td><td>59.70</td><td>77.87</td><td>BUY</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>3</td><td><strong>삼성전자</strong></td><td>005930</td><td>49.90</td><td>0.00</td><td>64.00</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>296,000</td><td>57.25</td><td>58.25</td><td>HOLD</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>4</td><td><strong>신세계</strong></td><td>004170</td><td>47.00</td><td>0.00</td><td>40.65</td><td>0.00</td><td>진입 부적합</td><td>535,000</td><td>53.60</td><td>71.27</td><td>BUY</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class=""><td>5</td><td><strong>SK스퀘어</strong></td><td>402340</td><td>37.06</td><td>0.00</td><td>62.54</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,190,000</td><td>48.50</td><td>62.22</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>6</td><td><strong>롯데쇼핑</strong></td><td>023530</td><td>36.75</td><td>0.00</td><td>32.07</td><td>0.00</td><td>진입 부적합</td><td>175,700</td><td>40.70</td><td>59.33</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class=""><td>7</td><td><strong>SK하이닉스</strong></td><td>000660</td><td>34.09</td><td>0.00</td><td>60.60</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,976,000</td><td>39.75</td><td>48.61</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 fallback_stale</span></td><td>1차 통과</td></tr><tr class=""><td>8</td><td><strong>한화오션</strong></td><td>042660</td><td>33.63</td><td>0.00</td><td>57.23</td><td>35.44</td><td>관찰 / 조건부 진입</td><td>120,400</td><td>31.65</td><td>40.40</td><td>SKIP</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>9</td><td><strong>기가비스</strong></td><td>420770</td><td>25.75</td><td>0.00</td><td>28.85</td><td>0.00</td><td>진입 부적합</td><td>106,700</td><td>31.30</td><td>57.64</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>10</td><td><strong>씨아이에스</strong></td><td>222080</td><td>21.52</td><td>0.00</td><td>25.50</td><td>0.00</td><td>진입 부적합</td><td>14,430</td><td>21.25</td><td>45.45</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr>
+            <tr class=""><td>1</td><td><strong>기아</strong></td><td>000270</td><td>58.07</td><td>0.00</td><td>72.26</td><td>29.40</td><td>추격 금지 / 눌림 대기</td><td>178,100</td><td>59.70</td><td>77.87</td><td>BUY</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>2</td><td><strong>한미반도체</strong></td><td>042700</td><td>61.42</td><td>0.00</td><td>67.75</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>409,500</td><td>62.05</td><td>61.85</td><td>HOLD</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>3</td><td><strong>삼성전자</strong></td><td>005930</td><td>49.90</td><td>0.00</td><td>64.00</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>296,000</td><td>57.25</td><td>58.25</td><td>HOLD</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>4</td><td><strong>SK스퀘어</strong></td><td>402340</td><td>37.06</td><td>0.00</td><td>62.54</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,190,000</td><td>48.50</td><td>62.22</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>5</td><td><strong>SK하이닉스</strong></td><td>000660</td><td>34.09</td><td>0.00</td><td>60.60</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,976,000</td><td>39.75</td><td>48.61</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 fallback_stale</span></td><td>1차 통과</td></tr><tr class=""><td>6</td><td><strong>한화오션</strong></td><td>042660</td><td>33.63</td><td>0.00</td><td>57.23</td><td>35.44</td><td>관찰 / 조건부 진입</td><td>120,400</td><td>31.65</td><td>40.40</td><td>SKIP</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>7</td><td><strong>신세계</strong></td><td>004170</td><td>47.00</td><td>0.00</td><td>40.65</td><td>0.00</td><td>진입 부적합</td><td>482,500</td><td>53.60</td><td>71.78</td><td>BUY</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>8</td><td><strong>롯데쇼핑</strong></td><td>023530</td><td>36.75</td><td>0.00</td><td>32.07</td><td>0.00</td><td>진입 부적합</td><td>175,700</td><td>40.70</td><td>59.33</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>9</td><td><strong>기가비스</strong></td><td>420770</td><td>25.75</td><td>0.00</td><td>28.85</td><td>0.00</td><td>진입 부적합</td><td>106,700</td><td>31.30</td><td>57.64</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>10</td><td><strong>씨아이에스</strong></td><td>222080</td><td>21.52</td><td>0.00</td><td>25.50</td><td>0.00</td><td>진입 부적합</td><td>14,430</td><td>21.25</td><td>45.45</td><td>HOLD</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr>
           </tbody>
         </table>
       </div>
@@ -575,7 +575,7 @@
       <h2>검증용 MD 요약</h2>
       <p>아래는 핵심 문구만 요약해 보관한 영역입니다.</p>
       <div class="footer-markdown">
-        <div class="note">중기 점수(mid_term_score) 기준으로 정렬 · 중기 후보 상위 3종목 · 데이터 제한 상태 확인용</div>
+        <div class="note">Top N main ranking uses candidate_quality_score = mid_term_score 60% + universe_score 25% + total_score 15%; entry_timing_score is reference only. · 중기 투자 후보 상위 3종목 · 데이터 제한 상태 확인용</div>
       </div>
     </section>
   </main>
