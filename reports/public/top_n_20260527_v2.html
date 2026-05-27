@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Top N 중기 후보 리포트</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6fb;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-strong: #ffffff;
+      --line: rgba(15, 23, 42, 0.10);
+      --text: #122033;
+      --muted: #5f6b7a;
+      --accent: #1d4ed8;
+      --accent-2: #0f766e;
+      --accent-3: #7c3aed;
+      --warn: #9f1239;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.10);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(29, 78, 216, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(124, 58, 237, 0.10), transparent 26%),
+        linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
+    }
+    .shell {
+      width: min(1480px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(29, 78, 216, 0.98), rgba(15, 118, 110, 0.92) 52%, rgba(124, 58, 237, 0.90));
+      color: #fff;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -120px -160px auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.10);
+      filter: blur(2px);
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 0.88rem;
+      letter-spacing: 0.01em;
+    }
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .hero-meta, .hero-counts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 0.90rem;
+      backdrop-filter: blur(6px);
+    }
+    .section {
+      margin-top: 20px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .summary-card {
+      grid-column: span 5;
+    }
+    .status-card {
+      grid-column: span 3;
+    }
+    .overview-card {
+      grid-column: span 4;
+    }
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.18rem;
+    }
+    .card h3 {
+      margin: 10px 0 6px;
+      font-size: 1.15rem;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .bullets {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .bullets li + li {
+      margin-top: 6px;
+    }
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .stock-card {
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .stock-card h3 {
+      margin: 10px 0 6px;
+      font-size: 1.25rem;
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(29, 78, 216, 0.10);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.10);
+      color: var(--accent-2);
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+    .card-sub {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+    .metric-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+    .metric {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.74);
+    }
+    .metric .label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 4px;
+    }
+    .metric .value {
+      display: block;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      background: rgba(15, 23, 42, 0.06);
+    }
+    .chip-flow {
+      background: rgba(29, 78, 216, 0.12);
+      color: #1e3a8a;
+    }
+    .chip-theme {
+      background: rgba(124, 58, 237, 0.12);
+      color: #5b21b6;
+    }
+    .chip-state-ok {
+      background: rgba(15, 118, 110, 0.12);
+      color: #0f766e;
+    }
+    .chip-state-none {
+      background: rgba(159, 18, 57, 0.12);
+      color: var(--warn);
+    }
+    .table-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    .table-head {
+      padding: 20px 20px 0;
+    }
+    .table-head p {
+      margin-top: 8px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    .data-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #eef3ff;
+      color: #243042;
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+    .data-table tbody td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      vertical-align: top;
+    }
+    .data-table tbody tr:nth-child(even) {
+      background: rgba(248, 250, 252, 0.65);
+    }
+    .data-table tbody tr.top-row {
+      background: rgba(29, 78, 216, 0.06);
+    }
+    .data-table tbody tr.fallback-row {
+      background: rgba(159, 18, 57, 0.05);
+    }
+    .subtle {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+    .note {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .placeholder {
+      display: grid;
+      gap: 10px;
+      min-height: 120px;
+      align-items: center;
+    }
+    .placeholder strong {
+      color: var(--accent);
+    }
+    .footer-markdown {
+      margin-top: 16px;
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px dashed rgba(15, 23, 42, 0.14);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .footer-markdown pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: inherit;
+      color: #4b5563;
+      font-size: 0.86rem;
+      line-height: 1.6;
+    }
+    @media (max-width: 1100px) {
+      .summary-card, .status-card, .overview-card {
+        grid-column: span 12;
+      }
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 20px, 100%);
+        padding: 16px 0 28px;
+      }
+      .hero, .card {
+        border-radius: 20px;
+      }
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+      .data-table {
+        font-size: 0.84rem;
+      }
+      .data-table thead th, .data-table tbody td {
+        padding: 10px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-kicker">카드형 중기 후보 리포트</div>
+      <h1>Top N 중기 후보 리포트</h1>
+        <p style="margin:0;max-width:920px;line-height:1.7;color:rgba(255,255,255,0.92);">
+        중기 점수는 기업, 차트, 수급, 테마 점수를 가중 반영한 후보 점수이고, 진입 타이밍 점수는 별도 참고값입니다. 이번 결과는 데이터 제한 상태가 있어도 기준을 한 눈에 읽을 수 있도록 정리한 요약형 화면입니다.
+      </p>
+      <div class="hero-meta">
+        <span class="pill">분석 기준 중기</span><span class="pill">상위 종목 수 10</span><span class="pill">후보 분석 수 20</span><span class="pill">캐시 버전 9</span>
+      </div>
+      <div class="hero-counts">
+        <span class="pill">캐시 사용 0</span><span class="pill">캐시 미사용 20</span><span class="pill">수급 정상 2/20</span><span class="pill">테마 정상 15/20</span>
+      </div>
+    </section>
+
+    <section class="section grid">
+      <article class="card summary-card">
+        <h2>요약 카드</h2>
+        <ul class="bullets">
+          <li>이번 결과는 정렬 기준: 중기 후보 정렬 점수(candidate_quality_score) = 중기 점수 60% + 유니버스 점수 25% + 종합 판단 점수 15%. 진입 타이밍 점수는 매수 시점 참고값이며, 순위 정렬에는 직접 사용하지 않습니다.로 정렬됩니다.</li>
+          <li>순위는 정렬 점수 기준이며, 중기 점수 단독 순위와 다를 수 있습니다.</li>
+          <li>중기 점수는 후보 랭킹용 점수이고, 진입 타이밍 점수는 보조 기준입니다.</li>
+          <li>이 리포트는 단기 타이밍이 아닌, 중기 관점에서 반복 등장/점수 안정성/추세를 기반으로 후보를 선정합니다.</li>
+          <li>중기 후보 상위 3종목: 현대차, 기아, 한미반도체</li>
+          <li>가격 기준일: 2026-05-27. 기준가격은 실시간 가격이 아니라 리포트 기준일의 기준가/종가입니다.</li>
+          <li>데이터 기준 안내: 데이터 제한 상태 확인용 · OHLCV 비활성 시 차트 점수 제외 가능</li>
+          <li>전일 데이터 기준 해석 시 전일 기준 전제입니다.</li>
+        </ul>
+      </article>
+
+      <article class="card status-card">
+        <h2>데이터 상태</h2>
+        <p>수급 / 테마 가용성을 빠르게 확인할 수 있습니다.</p>
+        <div class="chips" style="margin-top:14px;">
+          <span class="chip chip-state-ok">수급 있음 2/20</span>
+          <span class="chip chip-state-ok">테마 있음 15/20</span>
+          <span class="chip chip-state-ok">캐시 사용 0</span>
+          <span class="chip chip-state-none">캐시 미사용 20</span>
+        </div>
+        <div class="note">상위 진입 후보 정책: 제외 또는 보충 후보 종목은 메인 Top N에서 제외되며 상위 진입 후보 수는 상위 종목 수보다 적을 수 있습니다</div>
+        <div class="note">전체 후보 목록 정책: 전체 후보 목록은 비교를 위해 보충 후보를 유지합니다</div>
+      </article>
+
+      <article class="card overview-card">
+        <h2>중기 후보 상위 3종목</h2>
+        <p>현재 선택된 상위 종목을 카드로 보여줍니다.</p>
+        <div class="placeholder">
+            <strong>현대차, 기아, 한미반도체</strong>
+          <div class="subtle">중기 점수 기준 상위 종목입니다.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="top-grid">
+        
+        <article class="stock-card">
+          <div class="card-head">
+            <span class="rank-badge">#1</span>
+            <span class="tier-badge">1차 통과</span>
+          </div>
+          <h3>현대차</h3>
+          <div class="card-sub">005380 · KOSPI</div>
+          <div class="metric-grid">
+            <div class="metric"><span class="label">중기 점수</span><span class="value">57.10</span></div>
+            <div class="metric"><span class="label">리스크 패널티</span><span class="value">0.00</span></div>
+            <div class="metric"><span class="label">진입상태</span><span class="value">관찰 / 조건부 진입</span></div>
+            <div class="metric"><span class="label">종합 점수</span><span class="value">77.00</span></div>
+            <div class="metric"><span class="label">기준가격</span><span class="value">681,000</span></div>
+            <div class="metric"><span class="label">진입 타이밍 참고 점수</span><span class="value">59.00</span></div>
+          </div>
+          <div class="metric-grid" style="margin-top:12px;">
+            <div class="metric"><span class="label">Top N 편입일</span><span class="value">2026-05-04</span></div>
+            <div class="metric"><span class="label">편입 기준가격</span><span class="value">539,000</span></div>
+            <div class="metric"><span class="label">현재 기준가격</span><span class="value">681,000</span></div>
+            <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">+26.35%</span></div>
+            <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">8</span></div>
+          </div>
+          <div class="note" style="margin-top:12px;">
+            점수 이유 · 기업(dart) 98.00 / 테마(theme) 70.00 / 차트(chart) 73.00 / 수급(flow) 0.00 / 리스크 없음
+          </div>
+          <div class="note">⚠️ 수급 데이터 없음</div>
+          
+          <div class="note" style="margin-top:12px;">
+            <strong>애널리스트</strong>
+            <div class="subtle">애널리스트 점수 미반영 / 리포트 없음</div>
+          </div>
+            
+          <div class="chips"><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></div>
+        </article>
+        
+        <article class="stock-card">
+          <div class="card-head">
+            <span class="rank-badge">#2</span>
+            <span class="tier-badge">1차 통과</span>
+          </div>
+          <h3>기아</h3>
+          <div class="card-sub">000270 · KOSPI</div>
+          <div class="metric-grid">
+            <div class="metric"><span class="label">중기 점수</span><span class="value">52.79</span></div>
+            <div class="metric"><span class="label">리스크 패널티</span><span class="value">0.00</span></div>
+            <div class="metric"><span class="label">진입상태</span><span class="value">관찰 / 조건부 진입</span></div>
+            <div class="metric"><span class="label">종합 점수</span><span class="value">61.77</span></div>
+            <div class="metric"><span class="label">기준가격</span><span class="value">164,700</span></div>
+            <div class="metric"><span class="label">진입 타이밍 참고 점수</span><span class="value">49.35</span></div>
+          </div>
+          <div class="metric-grid" style="margin-top:12px;">
+            <div class="metric"><span class="label">Top N 편입일</span><span class="value">2026-04-30</span></div>
+            <div class="metric"><span class="label">편입 기준가격</span><span class="value">156,900</span></div>
+            <div class="metric"><span class="label">현재 기준가격</span><span class="value">164,700</span></div>
+            <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">+4.97%</span></div>
+            <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">8</span></div>
+          </div>
+          <div class="note" style="margin-top:12px;">
+            점수 이유 · 기업(dart) 100.00 / 테마(theme) 70.00 / 차트(chart) 39.50 / 수급(flow) 0.00 / 리스크 없음
+          </div>
+          <div class="note">⚠️ 수급 데이터 없음</div>
+          
+          <div class="note" style="margin-top:12px;">
+            <strong>애널리스트</strong>
+            <div class="subtle">애널리스트 점수 미반영 / 리포트 없음</div>
+          </div>
+            
+          <div class="chips"><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></div>
+        </article>
+        
+        <article class="stock-card">
+          <div class="card-head">
+            <span class="rank-badge">#3</span>
+            <span class="tier-badge">1차 통과</span>
+          </div>
+          <h3>한미반도체</h3>
+          <div class="card-sub">042700 · KOSPI</div>
+          <div class="metric-grid">
+            <div class="metric"><span class="label">중기 점수</span><span class="value">55.57</span></div>
+            <div class="metric"><span class="label">리스크 패널티</span><span class="value">0.00</span></div>
+            <div class="metric"><span class="label">진입상태</span><span class="value">관찰 / 조건부 진입</span></div>
+            <div class="metric"><span class="label">종합 점수</span><span class="value">50.48</span></div>
+            <div class="metric"><span class="label">기준가격</span><span class="value">319,000</span></div>
+            <div class="metric"><span class="label">진입 타이밍 참고 점수</span><span class="value">52.30</span></div>
+          </div>
+          <div class="metric-grid" style="margin-top:12px;">
+            <div class="metric"><span class="label">Top N 편입일</span><span class="value">2026-04-30</span></div>
+            <div class="metric"><span class="label">편입 기준가격</span><span class="value">357,500</span></div>
+            <div class="metric"><span class="label">현재 기준가격</span><span class="value">319,000</span></div>
+            <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">-10.77%</span></div>
+            <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">8</span></div>
+          </div>
+          <div class="note" style="margin-top:12px;">
+            점수 이유 · 기업(dart) 74.00 / 테마(theme) 70.00 / 차트(chart) 37.50 / 수급(flow) 35.00 / 리스크 없음
+          </div>
+          <div class="note">수급/테마 데이터 정상</div>
+          
+          <div class="note" style="margin-top:12px;">
+            <strong>애널리스트</strong>
+            <div class="subtle">애널리스트 점수 미반영 / 리포트 없음</div>
+          </div>
+            
+          <div class="chips"><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></div>
+        </article>
+        
+      </div>
+    </section>
+
+    
+    <section class="section card">
+      <h2>데이터 신뢰도 보정</h2>
+      <ul class="bullets">
+        <li><strong>현대로템 (064350)</strong>: 데이터 신뢰도 보정 -1.00 / 테마 보충 데이터 사용(최신성 낮음)</li><li><strong>미래에셋증권 (006800)</strong>: 데이터 신뢰도 보정 -1.00 / 테마 보충 데이터 사용(최신성 낮음)</li><li><strong>SK하이닉스 (000660)</strong>: 데이터 신뢰도 보정 -1.00 / 테마 보충 데이터 사용(최신성 낮음)</li>
+      </ul>
+    </section>
+    
+
+    <section class="section card table-card">
+      <div class="table-head">
+        <h2>중기 후보 상위 10개 표</h2>
+        <p>중기 점수와 리스크 패널티, 그리고 기존 진입 타이밍 참고값을 분리해서 봅니다. 보충 후보는 별도로 유지됩니다.</p>
+      </div>
+      <div style="overflow:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>종목명</th>
+              <th>코드</th>
+              <th>중기 점수</th>
+              <th>리스크 패널티</th>
+              <th>정렬 점수</th>
+              <th>진입 타이밍 점수</th>
+              <th>진입 상태</th>
+              <th>기준가격</th>
+              <th>진입 타이밍 참고 점수</th>
+              <th>종합 판단 점수</th>
+              <th>수급 / 테마</th>
+              <th>통과 등급</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="top-row"><td>1</td><td><strong>현대차</strong><div class='subtle'>KOSPI</div></td><td>005380</td><td>57.10</td><td>0.00</td><td>70.62</td><td>49.30</td><td>관찰 / 조건부 진입</td><td>681,000</td><td>59.00</td><td>77.00</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="top-row"><td>2</td><td><strong>기아</strong><div class='subtle'>KOSPI</div></td><td>000270</td><td>52.79</td><td>0.00</td><td>68.81</td><td>38.45</td><td>관찰 / 조건부 진입</td><td>164,700</td><td>49.35</td><td>61.77</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="top-row"><td>3</td><td><strong>한미반도체</strong><div class='subtle'>KOSPI</div></td><td>042700</td><td>55.57</td><td>0.00</td><td>64.50</td><td>37.13</td><td>관찰 / 조건부 진입</td><td>319,000</td><td>52.30</td><td>50.48</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>4</td><td><strong>삼성전자</strong><div class='subtle'>KOSPI</div></td><td>005930</td><td>50.08</td><td>0.00</td><td>59.70</td><td>28.10</td><td>추격 금지 / 눌림 대기</td><td>307,000</td><td>57.55</td><td>59.70</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>5</td><td><strong>현대로템</strong><div class='subtle'>KOSPI</div></td><td>064350</td><td>49.16</td><td>0.00</td><td>64.60</td><td>49.25</td><td>관찰 / 조건부 진입</td><td>207,000</td><td>47.70</td><td>62.70</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 보충 데이터 사용(최신성 낮음) / 재검증 필요</span></td><td>1차 통과</td></tr><tr class=""><td>6</td><td><strong>한화오션</strong><div class='subtle'>KOSPI</div></td><td>042660</td><td>42.41</td><td>0.00</td><td>64.53</td><td>46.74</td><td>관찰 / 조건부 진입</td><td>134,900</td><td>51.80</td><td>69.80</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>7</td><td><strong>우리금융지주</strong><div class='subtle'>KOSPI</div></td><td>316140</td><td>48.47</td><td>0.00</td><td>63.21</td><td>27.00</td><td>추격 금지 / 눌림 대기</td><td>30,650</td><td>39.15</td><td>48.07</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>8</td><td><strong>신한지주</strong><div class='subtle'>KOSPI</div></td><td>055550</td><td>49.28</td><td>0.00</td><td>62.82</td><td>38.10</td><td>관찰 / 조건부 진입</td><td>95,000</td><td>39.55</td><td>48.47</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>9</td><td><strong>미래에셋증권</strong><div class='subtle'>KOSPI</div></td><td>006800</td><td>49.28</td><td>0.00</td><td>63.77</td><td>38.10</td><td>관찰 / 조건부 진입</td><td>64,500</td><td>39.55</td><td>48.47</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 보충 데이터 사용(최신성 낮음) / 재검증 필요</span></td><td>1차 통과</td></tr><tr class=""><td>10</td><td><strong>HD현대중공업</strong><div class='subtle'>KOSPI</div></td><td>329180</td><td>37.52</td><td>0.00</td><td>60.71</td><td>35.30</td><td>관찰 / 조건부 진입</td><td>744,000</td><td>49.40</td><td>67.40</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section card table-card">
+      <div class="table-head">
+        <h2>전체 후보 목록</h2>
+        <p>전체 후보 목록 기준 전체 순서를 보여줍니다. 보충 후보는 시각적으로 구분합니다.</p>
+      </div>
+      <div style="overflow:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>종목명</th>
+              <th>코드</th>
+              <th>중기 점수</th>
+              <th>리스크 패널티</th>
+              <th>정렬 점수</th>
+              <th>진입 타이밍 점수</th>
+              <th>진입 상태</th>
+              <th>기준가격</th>
+              <th>진입 타이밍 참고 점수</th>
+              <th>종합 판단 점수</th>
+              <th>판단</th>
+              <th>수급 / 테마</th>
+              <th>통과 등급</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class=""><td>1</td><td><strong>현대차</strong></td><td>005380</td><td>57.10</td><td>0.00</td><td>70.62</td><td>49.30</td><td>관찰 / 조건부 진입</td><td>681,000</td><td>59.00</td><td>77.00</td><td>중기 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>2</td><td><strong>기아</strong></td><td>000270</td><td>52.79</td><td>0.00</td><td>68.81</td><td>38.45</td><td>관찰 / 조건부 진입</td><td>164,700</td><td>49.35</td><td>61.77</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>3</td><td><strong>한미반도체</strong></td><td>042700</td><td>55.57</td><td>0.00</td><td>64.50</td><td>37.13</td><td>관찰 / 조건부 진입</td><td>319,000</td><td>52.30</td><td>50.48</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>4</td><td><strong>삼성전자</strong></td><td>005930</td><td>50.08</td><td>0.00</td><td>59.70</td><td>28.10</td><td>추격 금지 / 눌림 대기</td><td>307,000</td><td>57.55</td><td>59.70</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 있음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>5</td><td><strong>현대로템</strong></td><td>064350</td><td>49.16</td><td>0.00</td><td>64.60</td><td>49.25</td><td>관찰 / 조건부 진입</td><td>207,000</td><td>47.70</td><td>62.70</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 보충 데이터 사용(최신성 낮음) / 재검증 필요</span></td><td>1차 통과</td></tr><tr class=""><td>6</td><td><strong>한화오션</strong></td><td>042660</td><td>42.41</td><td>0.00</td><td>64.53</td><td>46.74</td><td>관찰 / 조건부 진입</td><td>134,900</td><td>51.80</td><td>69.80</td><td>중기 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>7</td><td><strong>우리금융지주</strong></td><td>316140</td><td>48.47</td><td>0.00</td><td>63.21</td><td>27.00</td><td>추격 금지 / 눌림 대기</td><td>30,650</td><td>39.15</td><td>48.07</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>8</td><td><strong>신한지주</strong></td><td>055550</td><td>49.28</td><td>0.00</td><td>62.82</td><td>38.10</td><td>관찰 / 조건부 진입</td><td>95,000</td><td>39.55</td><td>48.47</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>9</td><td><strong>미래에셋증권</strong></td><td>006800</td><td>49.28</td><td>0.00</td><td>63.77</td><td>38.10</td><td>관찰 / 조건부 진입</td><td>64,500</td><td>39.55</td><td>48.47</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 보충 데이터 사용(최신성 낮음) / 재검증 필요</span></td><td>1차 통과</td></tr><tr class=""><td>10</td><td><strong>HD현대중공업</strong></td><td>329180</td><td>37.52</td><td>0.00</td><td>60.71</td><td>35.30</td><td>관찰 / 조건부 진입</td><td>744,000</td><td>49.40</td><td>67.40</td><td>중기 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>11</td><td><strong>KB금융</strong></td><td>105560</td><td>38.90</td><td>0.00</td><td>58.30</td><td>37.13</td><td>관찰 / 조건부 진입</td><td>157,300</td><td>34.80</td><td>50.72</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>12</td><td><strong>SK하이닉스</strong></td><td>000660</td><td>34.09</td><td>0.00</td><td>60.60</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>2,243,000</td><td>39.75</td><td>54.33</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 보충 데이터 사용(최신성 낮음) / 재검증 필요</span></td><td>1차 통과</td></tr><tr class=""><td>13</td><td><strong>하나금융지주</strong></td><td>086790</td><td>38.90</td><td>0.00</td><td>57.91</td><td>37.13</td><td>관찰 / 조건부 진입</td><td>122,100</td><td>34.80</td><td>50.72</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>14</td><td><strong>SK스퀘어</strong></td><td>402340</td><td>34.09</td><td>0.00</td><td>59.04</td><td>20.00</td><td>추격 금지 / 눌림 대기</td><td>1,276,000</td><td>39.75</td><td>54.33</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>15</td><td><strong>한국전력</strong></td><td>015760</td><td>36.75</td><td>0.00</td><td>59.82</td><td>35.54</td><td>관찰 / 조건부 진입</td><td>39,500</td><td>40.70</td><td>52.53</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class=""><td>16</td><td><strong>삼성중공업</strong></td><td>010140</td><td>32.09</td><td>0.00</td><td>56.84</td><td>34.25</td><td>추격 금지 / 눌림 대기</td><td>29,450</td><td>38.75</td><td>50.83</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>1차 통과</td></tr><tr class="fallback-row"><td>17</td><td><strong>신세계</strong></td><td>004170</td><td>43.57</td><td>0.00</td><td>29.55</td><td>0.00</td><td>진입 부적합</td><td>527,000</td><td>36.75</td><td>55.06</td><td>관찰 후보</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>18</td><td><strong>롯데쇼핑</strong></td><td>023530</td><td>34.31</td><td>0.00</td><td>31.60</td><td>0.00</td><td>진입 부적합</td><td>152,200</td><td>33.00</td><td>42.50</td><td>제외 / 데이터 부족</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 있음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>19</td><td><strong>기가비스</strong></td><td>420770</td><td>21.78</td><td>0.00</td><td>25.70</td><td>0.00</td><td>진입 부적합</td><td>123,400</td><td>21.85</td><td>42.65</td><td>제외 / 데이터 부족</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr><tr class="fallback-row"><td>20</td><td><strong>씨아이에스</strong></td><td>222080</td><td>21.52</td><td>0.00</td><td>25.50</td><td>0.00</td><td>진입 부적합</td><td>12,570</td><td>21.25</td><td>41.25</td><td>제외 / 데이터 부족</td><td><span class="chip chip-flow">수급 없음</span> <span class="chip chip-theme">테마 없음</span></td><td>보충 후보</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section grid">
+      <article class="card" style="grid-column: span 8;">
+        <h2>중기 후보 해석</h2>
+        <ul class="bullets">
+          <li>중기 점수는 중기 종목을 고르는 기준이고, 진입 타이밍 점수는 보조 기준입니다.</li>
+          <li>수급 / 테마 데이터가 비어 있으면 해석은 보수적으로 봐야 합니다.</li>
+          <li>Top 3와 Top 10은 같은 데이터라도 의미가 다르므로, 선별과 진입은 분리해서 보시는 편이 맞습니다.</li>
+        </ul>
+      </article>
+      <article class="card" style="grid-column: span 4;">
+        <h2>애널리스트 전망</h2>
+        <div class="placeholder">
+          <strong>상위 후보 카드에 종목별 애널리스트 전망을 표시합니다.</strong>
+          <div class="subtle">데이터가 없는 종목은 카드에서 애널리스트 리포트 없음으로 표시됩니다.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section card">
+      <h2>검증용 MD 요약</h2>
+      <p>아래는 핵심 문구만 요약해 보관한 영역입니다.</p>
+      <div class="footer-markdown">
+        <div class="note">정렬 기준: 중기 후보 정렬 점수(candidate_quality_score) = 중기 점수 60% + 유니버스 점수 25% + 종합 판단 점수 15%. 진입 타이밍 점수는 매수 시점 참고값이며, 순위 정렬에는 직접 사용하지 않습니다. · 중기 투자 후보 상위 3종목 · 데이터 제한 상태 확인용</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
