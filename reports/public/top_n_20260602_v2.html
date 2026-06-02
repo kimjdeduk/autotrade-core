@@ -264,13 +264,19 @@
       text-align: left;
       padding: 14px 12px;
       border-bottom: 1px solid var(--line);
+      border-right: 1px solid rgba(15, 23, 42, 0.08);
       font-size: 0.88rem;
       white-space: nowrap;
     }
     .data-table tbody td {
       padding: 14px 12px;
       border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      border-right: 1px solid rgba(15, 23, 42, 0.08);
       vertical-align: top;
+      white-space: nowrap;
+    }
+    .data-table thead th:last-child, .data-table tbody td:last-child {
+      border-right: 0;
     }
     .data-table tbody tr:nth-child(even) {
       background: rgba(248, 250, 252, 0.65);
@@ -371,6 +377,7 @@
           <li>이 리포트는 단기 타이밍이 아닌, 중기 관점에서 반복 등장/점수 안정성/추세를 기반으로 후보를 선정합니다.</li>
           <li>중기 후보 상위 3종목: 기아, 한미반도체, 삼성전자</li>
           <li>가격 기준일: 2026-06-02. 기준가격은 실시간 가격이 아니라 리포트 기준일의 기준가/종가입니다.</li>
+          <li>조회 시점 현재가는 리포트 생성 시 KIS에서 조회한 가격이며, 페이지를 열 때 자동 갱신되는 실시간 가격은 아닙니다.</li>
           <li>데이터 기준 안내: 데이터 제한 상태 확인용 · OHLCV 비활성 시 차트 점수 제외 가능</li>
           <li>전일 데이터 기준 해석 시 전일 기준 전제입니다.</li>
         </ul>
@@ -422,8 +429,8 @@
             <div class="metric"><span class="label">편입 기준가격</span><span class="value">156,900</span></div>
             <div class="metric"><span class="label">추적 기준가격</span><span class="value">168,800</span></div>
             <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">+7.58%</span></div>
-            <div class="metric"><span class="label">실시간 현재가</span><span class="value">168,800</span></div>
-            <div class="metric"><span class="label">편입 이후 현재가 수익률</span><span class="value">+7.58%</span></div>
+            <div class="metric"><span class="label">조회 시점 현재가</span><span class="value">168,800</span></div>
+            <div class="metric"><span class="label">편입 이후 조회가 수익률</span><span class="value">+7.58%</span></div>
             <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">12</span></div>
           </div>
           <div class="note" style="margin-top:12px;">
@@ -459,8 +466,8 @@
             <div class="metric"><span class="label">편입 기준가격</span><span class="value">357,500</span></div>
             <div class="metric"><span class="label">추적 기준가격</span><span class="value">292,500</span></div>
             <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">-18.18%</span></div>
-            <div class="metric"><span class="label">실시간 현재가</span><span class="value">275,500</span></div>
-            <div class="metric"><span class="label">편입 이후 현재가 수익률</span><span class="value">-22.94%</span></div>
+            <div class="metric"><span class="label">조회 시점 현재가</span><span class="value">275,500</span></div>
+            <div class="metric"><span class="label">편입 이후 조회가 수익률</span><span class="value">-22.94%</span></div>
             <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">11</span></div>
           </div>
           <div class="note" style="margin-top:12px;">
@@ -496,8 +503,8 @@
             <div class="metric"><span class="label">편입 기준가격</span><span class="value">226,000</span></div>
             <div class="metric"><span class="label">추적 기준가격</span><span class="value">317,000</span></div>
             <div class="metric"><span class="label">편입 이후 기준 수익률</span><span class="value">+40.27%</span></div>
-            <div class="metric"><span class="label">실시간 현재가</span><span class="value">360,500</span></div>
-            <div class="metric"><span class="label">편입 이후 현재가 수익률</span><span class="value">+59.51%</span></div>
+            <div class="metric"><span class="label">조회 시점 현재가</span><span class="value">360,500</span></div>
+            <div class="metric"><span class="label">편입 이후 조회가 수익률</span><span class="value">+59.51%</span></div>
             <div class="metric"><span class="label">Top N 유지 일수</span><span class="value">12</span></div>
           </div>
           <div class="note" style="margin-top:12px;">
@@ -550,8 +557,8 @@
               <th>편입 기준가격</th>
               <th>추적 기준가격</th>
               <th>편입 이후 기준 수익률</th>
-              <th>실시간 현재가</th>
-              <th>편입 이후 현재가 수익률</th>
+              <th>조회 시점 현재가</th>
+              <th>편입 이후 조회가 수익률</th>
               <th>Top N 유지 일수</th>
               <th>진입 타이밍 참고 점수</th>
               <th>종합 판단 점수</th>
@@ -588,8 +595,8 @@
               <th>편입 기준가격</th>
               <th>추적 기준가격</th>
               <th>편입 이후 기준 수익률</th>
-              <th>실시간 현재가</th>
-              <th>편입 이후 현재가 수익률</th>
+              <th>조회 시점 현재가</th>
+              <th>편입 이후 조회가 수익률</th>
               <th>Top N 유지 일수</th>
               <th>진입 타이밍 참고 점수</th>
               <th>종합 판단 점수</th>
